@@ -1,6 +1,6 @@
 ```javascript
 // 🌊 CREATOR HQ — OCEAN THEME SCRIPT
-// Discord: https://discord.gg/Rb64dunDJ
+// Fixed bubble parallax speeds
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
           block: "start"
         });
       }
-
     });
 
   });
@@ -56,6 +55,10 @@ document.addEventListener("DOMContentLoaded", () => {
     bubble.style.opacity =
       Math.random() * 0.6 + 0.2;
 
+    // ⭐ Give this bubble ONE permanent parallax speed
+    bubble.dataset.parallaxSpeed =
+      (Math.random() * 0.15 + 0.05).toFixed(3);
+
     document.body.appendChild(bubble);
 
     setTimeout(() => {
@@ -64,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  // Make bubbles continuously
+  // Create bubbles
   setInterval(() => {
 
     if (Math.random() > 0.25) {
@@ -72,6 +75,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
   }, 500);
+
+
+  // Create starting bubbles
+  for (let i = 0; i < 20; i++) {
+    createBubble();
+  }
 
 
   // ==============================
@@ -131,33 +140,177 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   // ==============================
-  // 🌊 WAVE EFFECT
-  // ==============================
-
-  function createWave() {
-
-    const wave =
-      document.createElement("div");
-
-    wave.className = "ocean-wave";
-
-    document.body.appendChild(wave);
-
-    setTimeout(() => {
-      wave.remove();
-    }, 5000);
-  }
-
-  createWave();
-
-
-  // ==============================
-  // 💧 WATER CLICK EFFECT
+  // 🌊 WATER CLICK RIPPLE
   // ==============================
 
   document.addEventListener("click", event => {
 
     const ripple =
       document.createElement("div");
-```
 
+    ripple.className =
+      "water-ripple";
+
+    ripple.style.left =
+      event.clientX + "px";
+
+    ripple.style.top =
+      event.clientY + "px";
+
+    document.body.appendChild(ripple);
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 1000);
+
+  });
+
+
+  // ==============================
+  // 🎮 BUTTON EFFECT
+  // ==============================
+
+  document.querySelectorAll(
+    ".main-button, .second-button, .join-small"
+  ).forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      button.classList.add(
+        "button-clicked"
+      );
+
+      setTimeout(() => {
+
+        button.classList.remove(
+          "button-clicked"
+        );
+
+      }, 150);
+
+    });
+
+  });
+
+
+  // ==============================
+  // 🐚 CARD 3D WATER EFFECT
+  // ==============================
+
+  document.querySelectorAll(
+    ".game-card, .event-card, .team-card"
+  ).forEach(card => {
+
+    card.addEventListener(
+      "mousemove",
+      event => {
+
+        const rect =
+          card.getBoundingClientRect();
+
+        const x =
+          event.clientX - rect.left;
+
+        const y =
+          event.clientY - rect.top;
+
+        const centerX =
+          rect.width / 2;
+
+        const centerY =
+          rect.height / 2;
+
+        const rotateX =
+          ((y - centerY) / centerY) * -4;
+
+        const rotateY =
+          ((x - centerX) / centerX) * 4;
+
+        card.style.transform =
+          `perspective(700px)
+           rotateX(${rotateX}deg)
+           rotateY(${rotateY}deg)
+           translateY(-8px)`;
+
+      }
+    );
+
+
+    card.addEventListener(
+      "mouseleave",
+      () => {
+
+        card.style.transform =
+          "perspective(700px) rotateX(0deg) rotateY(0deg)";
+
+      }
+    );
+
+  });
+
+
+  // ==============================
+  // 🌊 FIXED PARALLAX SYSTEM
+  // ==============================
+
+  let ticking = false;
+
+  function updateParallax() {
+
+    const bubbles =
+      document.querySelectorAll(
+        ".ocean-bubble"
+      );
+
+    bubbles.forEach(bubble => {
+
+      // ⭐ Use the speed saved when the bubble was created
+      const speed =
+        parseFloat(
+          bubble.dataset.parallaxSpeed
+        ) || 0.1;
+
+      const movement =
+        window.scrollY * speed;
+
+      bubble.style.setProperty(
+        "--parallax-y",
+        `${movement}px`
+      );
+
+    });
+
+    ticking = false;
+  }
+
+
+  window.addEventListener(
+    "scroll",
+    () => {
+
+      if (!ticking) {
+
+        window.requestAnimationFrame(
+          updateParallax
+        );
+
+        ticking = true;
+      }
+
+    },
+    { passive: true }
+  );
+
+
+  // ==============================
+  // 🌊 PAGE START
+  // ==============================
+
+  updateParallax();
+
+  console.log(
+    "🌊 Creator HQ Ocean Theme loaded!"
+  );
+
+});
+```
