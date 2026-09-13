@@ -314,3 +314,72 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 ```
+```javascript
+// ==============================
+// 🌊 OCEAN MUSIC PLAYER
+// ==============================
+
+const oceanMusic =
+  document.getElementById("oceanMusic");
+
+const musicToggle =
+  document.getElementById("musicToggle");
+
+const musicStatus =
+  document.getElementById("musicStatus");
+
+const volumeControl =
+  document.getElementById("volumeControl");
+
+if (oceanMusic && musicToggle) {
+
+  // Starting volume
+  oceanMusic.volume =
+    Number(volumeControl.value);
+
+  // Play / pause
+  musicToggle.addEventListener("click", () => {
+
+    if (oceanMusic.paused) {
+
+      oceanMusic.play()
+        .then(() => {
+
+          musicToggle.textContent = "⏸️";
+          musicStatus.textContent =
+            "Ocean Vibes Playing";
+
+        })
+        .catch(() => {
+
+          musicStatus.textContent =
+            "Click again to play";
+
+        });
+
+    } else {
+
+      oceanMusic.pause();
+
+      musicToggle.textContent = "▶️";
+      musicStatus.textContent =
+        "Music Off";
+
+    }
+
+  });
+
+
+  // Volume
+  volumeControl.addEventListener(
+    "input",
+    () => {
+
+      oceanMusic.volume =
+        Number(volumeControl.value);
+
+    }
+  );
+
+}
+```
